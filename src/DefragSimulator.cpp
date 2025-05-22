@@ -207,14 +207,6 @@ void DefragSimulator::setAllBlocksToBAD(int touchX, int touchY) {
     }
   }
   
-  // Start vibration
-  M5.Power.Axp192.setLDO3(3300);
-
   // Play explosion sound
   soundManager.playExplosionSound();
-
-  delay(100);
-
-  // Stop vibration
-  M5.Power.Axp192.setLDO3(0);
 }
