@@ -1,3 +1,15 @@
+/**
+ * @file UIRenderer.h
+ * @brief User interface rendering for disk defragmentation visualization
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains the UIRenderer class which handles all user interface
+ * rendering including the window frame, progress bar, grid display, and
+ * hit counter for the disk defragmentation animation.
+ */
+
 #pragma once
 
 #include <M5GFX.h>

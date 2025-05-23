@@ -1,3 +1,14 @@
+/**
+ * @file FileManager.h
+ * @brief File management for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains the FileManager class which handles file identification,
+ * grouping, and movement operations during the defragmentation process.
+ */
+
 #pragma once
 
 #include <vector>

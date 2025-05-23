@@ -1,3 +1,14 @@
+/**
+ * @file Enums.h
+ * @brief Enumeration definitions for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains enumeration types used throughout the disk defragmentation
+ * animation, including animation states and block states.
+ */
+
 #pragma once
 
 // Animation states

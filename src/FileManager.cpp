@@ -1,4 +1,16 @@
+/**
+ * @file FileManager.cpp
+ * @brief Implementation of file management for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file implements the FileManager class which handles file identification,
+ * grouping, and movement operations during the defragmentation process.
+ */
+
 #include "FileManager.h"
+#include "PlatformCompat.h"
 
 // Constructor
 FileManager::FileManager(GridManager& gridManager)

@@ -1,3 +1,14 @@
+/**
+ * @file Colors.h
+ * @brief Color definitions for disk defragmentation visualization
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains all color constants used in the disk defragmentation
+ * animation, organized into namespaces for blocks and UI elements.
+ */
+
 #pragma once
 
 #include <cstdint>

@@ -1,3 +1,15 @@
+/**
+ * @file SoundManager.h
+ * @brief Sound effects management for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains the SoundManager class which handles sound effects
+ * for the disk defragmentation animation, including seek sounds and
+ * explosion effects.
+ */
+
 #pragma once
 
 #include <M5Unified.h>

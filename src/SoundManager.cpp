@@ -1,5 +1,18 @@
+/**
+ * @file SoundManager.cpp
+ * @brief Implementation of sound effects management for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file implements the SoundManager class which handles sound effects
+ * for the disk defragmentation animation, including seek sounds and
+ * explosion effects.
+ */
+
 #include "Config.h"
 #include "SoundManager.h"
+#include "PlatformCompat.h"
 
 // Constructor
 SoundManager::SoundManager(std::mt19937& rng)

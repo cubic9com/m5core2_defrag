@@ -1,3 +1,15 @@
+/**
+ * @file Block.h
+ * @brief Block representation for disk defragmentation visualization
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file defines the Block class which represents individual blocks
+ * in the disk defragmentation animation, including their states, positions,
+ * and animation properties.
+ */
+
 #pragma once
 
 #include <M5GFX.h>

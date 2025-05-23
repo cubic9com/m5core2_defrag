@@ -1,3 +1,14 @@
+/**
+ * @file GridManager.h
+ * @brief Grid management for disk defragmentation visualization
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains the GridManager class which manages the grid of blocks
+ * representing disk sectors in the defragmentation simulation.
+ */
+
 #pragma once
 
 #include <vector>

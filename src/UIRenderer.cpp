@@ -1,3 +1,15 @@
+/**
+ * @file UIRenderer.cpp
+ * @brief Implementation of user interface rendering for disk defragmentation visualization
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file implements the UIRenderer class which handles all user interface
+ * rendering including the window frame, progress bar, grid display, and
+ * hit counter for the disk defragmentation animation.
+ */
+
 #include "UIRenderer.h"
 #include <M5Unified.h>
 
@@ -25,7 +37,7 @@ void UIRenderer::initialize() {
 // Draw UI elements
 void UIRenderer::drawUI() {
   // Title bar
-  canvas.fillRect(0, 0, screenWidth, Config::UI::TITLE_BAR_HEIGHT, Colors::UI::TITLE_BAR_BACK);
+  canvas.fillRect(0, 0, screenWidth, Config::TITLE_BAR_HEIGHT, Colors::UI::TITLE_BAR_BACK);
   
   // Buttons in the title bar
   // Close button
@@ -60,7 +72,10 @@ void UIRenderer::drawUI() {
   canvas.print("Defragmenting Drive C");
   
   // Status area at the bottom
-  int statusY = Config::Grid::OFFSET_Y + Config::Grid::HEIGHT * (Config::Block::HEIGHT + 2) + 7;
+  // Calculate from bottom of screen instead of grid bottom
+  int statusY = screenHeight - 55;  // 55 pixels from bottom for status text
+  int progressBarY = screenHeight - 40;  // 40 pixels from bottom for progress bar
+  int percentageY = screenHeight - 18;   // 18 pixels from bottom for percentage
   
   // Status message
   canvas.setTextColor(Colors::UI::BUTTON_TEXT);
@@ -83,18 +98,25 @@ void UIRenderer::drawUI() {
   }
   
   // Progress bar
-  canvas.drawRect(9, statusY + 15, Config::UI::ProgressBar::WIDTH, Config::UI::ProgressBar::HEIGHT, Colors::UI::PROGRESS_FRAME);
+  canvas.drawRect(Config::getProgressBarOffsetX(), progressBarY, Config::getProgressBarWidth(), Config::getProgressBarHeight(), Colors::UI::PROGRESS_FRAME);
   
-  int barWidth = (completionPercentage * 300) / 100;
+  // Calculate number of blocks based on percentage
+  // First calculate the maximum number of blocks that can fit
+  int progressBarInnerWidth = Config::getProgressBarWidth() - 4;  // -4 for padding (2 on each side)
+  int maxBlocks = (progressBarInnerWidth + Config::getProgressBarBlockSpacing() - Config::getProgressBarBlockWidth()) / Config::getProgressBarBlockSpacing();
+  
+  // Calculate how many blocks to show based on percentage
+  int blocksToShow = (completionPercentage * maxBlocks + 99) / 100;  // +99 for rounding up
   
   // Fill the progress bar (blue blocks)
-  for (int i = 0; i < barWidth / Config::UI::ProgressBar::BLOCK_SPACING; i++) {
-    canvas.fillRect(11 + i * Config::UI::ProgressBar::BLOCK_SPACING, statusY + 17, 
-                   Config::UI::ProgressBar::BLOCK_WIDTH, Config::UI::ProgressBar::BLOCK_HEIGHT, Colors::UI::PROGRESS_BLOCK);
+  for (int i = 0; i < blocksToShow; i++) {
+    int blockX = Config::getProgressBarOffsetX() + 2 + i * Config::getProgressBarBlockSpacing();  // +2 for padding
+    canvas.fillRect(blockX, progressBarY + 2, 
+                   Config::getProgressBarBlockWidth(), Config::getProgressBarBlockHeight(), Colors::UI::PROGRESS_BLOCK);
   }
   
   // Completion percentage
-  canvas.setCursor(5, statusY + 35);
+  canvas.setCursor(5, percentageY);
   canvas.print(completionPercentage);
   canvas.print("% Complete");
 }
@@ -124,14 +146,14 @@ void UIRenderer::draw(GridManager& gridManager, AnimationManager& animationManag
   canvas.fillScreen(Colors::UI::WINDOW_BACK);
   
   // Fill the grid area background with white
-  canvas.fillRect(Config::Grid::OFFSET_X - 3, Config::Grid::OFFSET_Y - 3, 
-                 Config::Grid::WIDTH * (Config::Block::WIDTH + 2) + 4, 
-                 Config::Grid::HEIGHT * (Config::Block::HEIGHT + 2) + 4, Colors::UI::GRID_BACK);
+  canvas.fillRect(Config::getGridOffsetX() - 3, Config::getGridOffsetY() - 3, 
+                 Config::getGridCols() * (Config::getBlockWidth() + 2) + 4, 
+                 Config::getGridRows() * (Config::getBlockHeight() + 2) + 4, Colors::UI::GRID_BACK);
   
   // Grid area frame
-  canvas.drawRect(Config::Grid::OFFSET_X - 3, Config::Grid::OFFSET_Y - 3, 
-                 Config::Grid::WIDTH * (Config::Block::WIDTH + 2) + 4, 
-                 Config::Grid::HEIGHT * (Config::Block::HEIGHT + 2) + 4, Colors::UI::GRID_FRAME);
+  canvas.drawRect(Config::getGridOffsetX() - 3, Config::getGridOffsetY() - 3, 
+                 Config::getGridCols() * (Config::getBlockWidth() + 2) + 4, 
+                 Config::getGridRows() * (Config::getBlockHeight() + 2) + 4, Colors::UI::GRID_FRAME);
   
   // Draw UI elements
   drawUI();

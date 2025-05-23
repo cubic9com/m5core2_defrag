@@ -1,3 +1,15 @@
+/**
+ * @file main.cpp
+ * @brief Main entry point for M5Stack Core 2 disk defragmentation simulator
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains the main entry point for the M5Stack version
+ * of the disk defragmentation animation. It initializes the hardware,
+ * sets up the display, and runs the main animation loop.
+ */
+
 #include <M5Unified.h>
 #include <M5GFX.h>
 #include "Config.h"
@@ -10,6 +22,7 @@
 #include "UIRenderer.h"
 #include "SoundManager.h"
 #include "DefragSimulator.h"
+#include "PlatformCompat.h"
 
 // Canvas for off-screen rendering
 M5Canvas canvas(&M5.Display);
@@ -24,6 +37,9 @@ void setup() {
   // Set screen orientation (landscape)
   M5.Display.setRotation(1);
   M5.Display.startWrite();
+  
+  // Initialize Config with screen dimensions
+  Config::getInstance()->initialize(M5.Display.width(), M5.Display.height());
   
   // Initialize canvas (same size as screen)
   canvas.createSprite(M5.Display.width(), M5.Display.height());

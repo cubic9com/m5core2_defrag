@@ -1,10 +1,23 @@
 # Overview / 概要
 
-The m5core2_defrag project displays a disk defragmentation tool-like animation on the [M5Stack Core 2](https://docs.m5stack.com/#/en/core/core2).
+The m5core2_defrag project displays a disk defragmentation tool-like animation on the [M5Stack Core 2](https://docs.m5stack.com/en/core/core2) etc.
 
 \[日本語\]
 
-m5core2_defrag プロジェクトは、[M5Stack Core 2](https://docs.m5stack.com/#/en/core/core2)にディスクデフラグメンテーションツール風のアニメーションを表示します。
+m5core2_defrag プロジェクトは、[M5Stack Core 2](https://docs.m5stack.com/en/core/core2) などにディスクデフラグメンテーションツール風のアニメーションを表示します。
+
+# Supported device / 対応デバイス
+
+- M5Stack Core2
+
+# Potentially compatible devices / 対応していると思われるデバイス
+
+- M5Stack Basic
+- M5Stack Gray
+- M5Stack Fire
+- M5Stack CoreS3
+- M5Stack CoreS3SE
+- M5Stack Tab5
 
 # Video / 動画
 

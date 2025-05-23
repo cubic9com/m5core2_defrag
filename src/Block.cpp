@@ -1,3 +1,15 @@
+/**
+ * @file Block.cpp
+ * @brief Implementation of block representation for disk defragmentation visualization
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file implements the Block class which represents individual blocks
+ * in the disk defragmentation animation, including their states, positions,
+ * animations, and rendering logic.
+ */
+
 #include "Block.h"
 
 Block::Block(int _x, int _y) : 
@@ -44,8 +56,8 @@ void Block::draw(AnimationState animState) {
   float useX = (isMoving || isExploding) ? animX : x;
   float useY = (isMoving || isExploding) ? animY : y;
   
-  int screenX = Config::Grid::OFFSET_X + useX * (Config::Block::WIDTH + 2);
-  int screenY = Config::Grid::OFFSET_Y + useY * (Config::Block::HEIGHT + 2);
+  int screenX = Config::getGridOffsetX() + useX * (Config::getBlockWidth() + 2);
+  int screenY = Config::getGridOffsetY() + useY * (Config::getBlockHeight() + 2);
   
   switch (state) {
     // Blocks that are not drawn
@@ -64,14 +76,14 @@ void Block::draw(AnimationState animState) {
     case BlockState::FIXED:
       {
         uint16_t color = getColor();
-        canvas.fillRect(screenX, screenY, Config::Block::WIDTH, Config::Block::HEIGHT, color);
-        canvas.drawRect(screenX, screenY, Config::Block::WIDTH, Config::Block::HEIGHT, Colors::Block::FRAME);
+        canvas.fillRect(screenX, screenY, Config::getBlockWidth(), Config::getBlockHeight(), color);
+        canvas.drawRect(screenX, screenY, Config::getBlockWidth(), Config::getBlockHeight(), Colors::Block::FRAME);
         
         // Special drawing for immovable data (red square in the upper right)
-        canvas.fillRect(screenX + Config::Block::WIDTH / 2, screenY, 
-                      Config::Block::WIDTH / 2, Config::Block::HEIGHT / 2, Colors::Block::FIXED_FORE);
-        canvas.drawRect(screenX + Config::Block::WIDTH / 2, screenY, 
-                      Config::Block::WIDTH / 2, Config::Block::HEIGHT / 2, Colors::Block::FRAME);
+        canvas.fillRect(screenX + Config::getBlockWidth() / 2, screenY, 
+                      Config::getBlockWidth() / 2, Config::getBlockHeight() / 2, Colors::Block::FIXED_FORE);
+        canvas.drawRect(screenX + Config::getBlockWidth() / 2, screenY, 
+                      Config::getBlockWidth() / 2, Config::getBlockHeight() / 2, Colors::Block::FRAME);
       }
       break;
       
@@ -79,12 +91,12 @@ void Block::draw(AnimationState animState) {
     case BlockState::BAD:
       {
         uint16_t color = getColor();
-        canvas.fillRect(screenX, screenY, Config::Block::WIDTH, Config::Block::HEIGHT, color);
-        canvas.drawRect(screenX, screenY, Config::Block::WIDTH, Config::Block::HEIGHT, Colors::Block::FRAME);
+        canvas.fillRect(screenX, screenY, Config::getBlockWidth(), Config::getBlockHeight(), color);
+        canvas.drawRect(screenX, screenY, Config::getBlockWidth(), Config::getBlockHeight(), Colors::Block::FRAME);
         
         // Special drawing for bad blocks (diagonal line)
         canvas.drawLine(screenX + 1, screenY + 1, 
-                      screenX + Config::Block::WIDTH - 2, screenY + Config::Block::HEIGHT - 2, Colors::Block::BAD_FORE);
+                      screenX + Config::getBlockWidth() - 2, screenY + Config::getBlockHeight() - 2, Colors::Block::BAD_FORE);
       }
       break;
       
@@ -92,8 +104,8 @@ void Block::draw(AnimationState animState) {
     default:
       {
         uint16_t color = getColor();
-        canvas.fillRect(screenX, screenY, Config::Block::WIDTH, Config::Block::HEIGHT, color);
-        canvas.drawRect(screenX, screenY, Config::Block::WIDTH, Config::Block::HEIGHT, Colors::Block::FRAME);
+        canvas.fillRect(screenX, screenY, Config::getBlockWidth(), Config::getBlockHeight(), color);
+        canvas.drawRect(screenX, screenY, Config::getBlockWidth(), Config::getBlockHeight(), Colors::Block::FRAME);
       }
       break;
   }
@@ -196,8 +208,8 @@ void Block::startExploding(int touchX, int touchY) {
   isExploding = true;
   
   // Calculate the screen coordinates of the block
-  int screenX = Config::Grid::OFFSET_X + x * (Config::Block::WIDTH + 2) + Config::Block::WIDTH / 2;
-  int screenY = Config::Grid::OFFSET_Y + y * (Config::Block::HEIGHT + 2) + Config::Block::HEIGHT / 2;
+  int screenX = Config::getGridOffsetX() + x * (Config::getBlockWidth() + 2) + Config::getBlockWidth() / 2;
+  int screenY = Config::getGridOffsetY() + y * (Config::getBlockHeight() + 2) + Config::getBlockHeight() / 2;
   
   // Calculate the direction vector from the touch coordinates (screen coordinate system)
   float dirX = screenX - touchX;

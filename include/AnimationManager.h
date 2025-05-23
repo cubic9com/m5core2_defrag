@@ -1,3 +1,14 @@
+/**
+ * @file AnimationManager.h
+ * @brief Animation management for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file contains the AnimationManager class which handles all animation
+ * states and transitions for the disk defragmentation visualization on M5Stack.
+ */
+
 #pragma once
 
 #include <vector>

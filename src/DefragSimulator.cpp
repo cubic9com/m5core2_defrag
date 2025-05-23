@@ -1,4 +1,17 @@
+/**
+ * @file DefragSimulator.cpp
+ * @brief Implementation of main controller for disk defragmentation simulation
+ * @author cubic9com
+ * @date 2025
+ * @copyright Copyright (c) 2025 cubic9com All rights reserved.
+ * 
+ * This file implements the DefragSimulator class which orchestrates the entire
+ * disk defragmentation animation, managing all subsystems including grid,
+ * file management, animations, UI rendering, and sound effects.
+ */
+
 #include "DefragSimulator.h"
+#include "PlatformCompat.h"
 
 // Constructor
 DefragSimulator::DefragSimulator() 
