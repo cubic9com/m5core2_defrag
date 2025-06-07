@@ -4,7 +4,19 @@ The m5core2_defrag project displays a disk defragmentation tool-like animation o
 
 \[日本語\]
 
-m5core2_defrag プロジェクトは、[M5Stack Core 2](https://docs.m5stack.com/en/core/core2) などにディスクデフラグメンテーションツール風のアニメーションを表示します。
+m5core2_defrag プロジェクトは、[M5Stack Core 2](https://docs.m5stack.com/en/core/core2) などにデフラグツール風のアニメを表示します。
+
+# Video / 動画
+
+![video](video.gif)
+
+# Motivation / 開発のきっかけ
+
+Back in the day, there was something oddly soothing about mindlessly watching a hard disk defragment. Inspired by that, I made an animation mimicking it on the M5Stack Core 2.
+
+\[日本語\]
+
+昔、ハードディスクのデフラグの様子をぼーっと見てるのって、なんか安らぎましたよね。ということで、デフラグツール風のアニメーションをM5Stackに表示するやつを作りました。
 
 # Supported device / 対応デバイス
 
@@ -18,10 +30,6 @@ m5core2_defrag プロジェクトは、[M5Stack Core 2](https://docs.m5stack.com
 - M5Stack CoreS3
 - M5Stack CoreS3SE
 - M5Stack Tab5
-
-# Video / 動画
-
-![video](video.gif)
 
 # Installation / インストール方法
 
@@ -113,7 +121,7 @@ NOTE: Please do not touch the screen while defragmenting. What happens if you do
 
 M5Stack Core 2の電源を入れると、自動的にデフラグアニメーション風のアニメーションが開始されます。
 
-注意: デフラグ中は画面をタッチしないでください。タッチしたらどうなるか知りませんよ。
+注意: デフラグ中は画面をタッチしないでください。タッチしたらどうなるか知りませんよ～。
 
 # ライセンス / License
 
