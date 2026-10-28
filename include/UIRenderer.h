@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <vector>
 #include <M5GFX.h>
 #include "Config.h"
 #include "Colors.h"
@@ -30,7 +31,23 @@ private:
   int screenWidth;  // Member variable to store screen width
   int screenHeight;  // Member variable to store screen height
   int hitCounter; // Hit counter
-  
+
+  // Tracking for partial display updates: only the horizontal bands whose
+  // content changed are transferred to the display (see pushChangedBands)
+  std::vector<int> cellSignatures; // Rendered appearance of each cell on the last pushed frame
+  std::vector<float> lastAnimX; // Animation position of each block on the last pushed frame
+  std::vector<float> lastAnimY;
+  std::vector<char> lastDynamic; // Whether each block was moving or exploding on the last pushed frame
+  bool hasPushedFrame; // Whether at least one frame has been pushed
+  AnimationState lastPushedState; // Animation state on the last pushed frame
+  int lastPushedPercentage; // Completion percentage on the last pushed frame
+
+  // Compute a compact signature of how a cell is rendered
+  int cellSignature(const Block& block) const;
+
+  // Transfer only the changed horizontal bands from the canvas to the display
+  void pushChangedBands(GridManager& gridManager);
+
 public:
   // Constructor
   UIRenderer();

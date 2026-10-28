@@ -20,7 +20,10 @@ AnimationManager::AnimationManager(GridManager& gridManager)
     driveInfoPhase1ScanCompleted(false),
     driveInfoPhase2ScanX(0),
     driveInfoPhase2ScanY(0),
-    driveInfoPhase2ScanCompleted(false) {
+    driveInfoPhase2ScanCompleted(false),
+    totalBlocksCache(-1),
+    unoptimizedBlocksCache(-1),
+    percentageFrameCounter(0) {
 }
 
 // Reset
@@ -32,6 +35,9 @@ void AnimationManager::reset() {
   driveInfoPhase2ScanX = 0;
   driveInfoPhase2ScanY = 0;
   driveInfoPhase2ScanCompleted = false;
+  totalBlocksCache = -1;
+  unoptimizedBlocksCache = -1;
+  percentageFrameCounter = 0;
 }
 
 // Block update process in reading drive info phase 1
@@ -78,89 +84,49 @@ void AnimationManager::updateBlocksInDriveInfoPhase2() {
   }
 }
 
-// Collect positions of moving and reading blocks
-void AnimationManager::collectMovingAndReadingBlocks(std::vector<std::pair<int, int>>& movingBlockPositions, 
-                                                   std::vector<std::pair<int, int>>& readingBlockPositions) {
-  movingBlockPositions.clear();
-  readingBlockPositions.clear();
-  
-  for (int y = 0; y < gridManager.getRowCount(); y++) {
-    for (int x = 0; x < gridManager.getColumnCount(); x++) {
-      Block& block = gridManager.getBlock(x, y);
-      if (block.isMoving) {
-        // Record the position of moving blocks
-        movingBlockPositions.push_back(std::make_pair(x, y));
-      } else if (block.state == BlockState::READING) {
-        // Record the position of blocks being read (source blocks)
-        readingBlockPositions.push_back(std::make_pair(x, y));
-      }
-    }
-  }
-}
-
-// Update all blocks
-void AnimationManager::updateAllBlocks() {
-  for (int y = 0; y < gridManager.getRowCount(); y++) {
-    for (int x = 0; x < gridManager.getColumnCount(); x++) {
-      gridManager.getBlock(x, y).updateMoving();
-    }
-  }
-}
-
-// Process blocks that have completed movement
-bool AnimationManager::processCompletedBlocks(const std::vector<std::pair<int, int>>& movingBlockPositions, 
-                                            const std::vector<std::pair<int, int>>& readingBlockPositions) {
-  bool anyBlockCompleted = false;
-  
-  // Process blocks that have completed movement
-  for (auto &pos : movingBlockPositions) {
-    int x = pos.first;
-    int y = pos.second;
-    Block& block = gridManager.getBlock(x, y);
-    
-    // Check if movement is complete (when isMoving flag becomes false)
-    if (!block.isMoving) {
-      anyBlockCompleted = true;
-      
-      // If the target position and current position are the same (when movement is complete)
-      if (x == block.targetX && y == block.targetY) {
-        // Set the target block to optimized
-        block.state = BlockState::OPTIMIZED;
-      }
-    }
-  }
-  
-  // If movement is complete, set the source blocks to free space
-  if (anyBlockCompleted) {
-    for (auto &pos : readingBlockPositions) {
-      int x = pos.first;
-      int y = pos.second;
-      Block& block = gridManager.getBlock(x, y);
-      
-      // Set the source block to free space
-      block.state = BlockState::FREE;
-      block.fileID = -1;
-    }
-  }
-  
-  return anyBlockCompleted;
-}
-
 // Block update process in defragmenting
 void AnimationManager::updateBlocksInDefragmenting() {
-  // Record positions of moving blocks
-  std::vector<std::pair<int, int>> movingBlockPositions;
-  // Record positions of blocks being read (READING)
-  std::vector<std::pair<int, int>> readingBlockPositions;
-  
-  // Collect positions of moving and reading blocks
-  collectMovingAndReadingBlocks(movingBlockPositions, readingBlockPositions);
-  
-  // Update all blocks
-  updateAllBlocks();
-  
-  // Process blocks that have completed movement
-  processCompletedBlocks(movingBlockPositions, readingBlockPositions);
+  bool anyBlockCompleted = false;
+
+  // Update the moving blocks in a single pass over the grid, without
+  // building temporary position lists on every frame
+  for (int y = 0; y < gridManager.getRowCount(); y++) {
+    for (int x = 0; x < gridManager.getColumnCount(); x++) {
+      Block& block = gridManager.getBlock(x, y);
+      if (!block.isMoving) {
+        continue;
+      }
+
+      block.updateMoving();
+
+      // Check if movement is complete (when isMoving flag becomes false)
+      if (!block.isMoving) {
+        anyBlockCompleted = true;
+
+        // If the target position and current position are the same (when movement is complete)
+        if (x == block.targetX && y == block.targetY) {
+          // Set the target block to optimized
+          block.state = BlockState::OPTIMIZED;
+        }
+      }
+    }
+  }
+
+  // If movement is complete, set the source blocks to free space
+  if (anyBlockCompleted) {
+    for (int y = 0; y < gridManager.getRowCount(); y++) {
+      for (int x = 0; x < gridManager.getColumnCount(); x++) {
+        Block& block = gridManager.getBlock(x, y);
+        if (block.state == BlockState::READING) {
+          block.state = BlockState::FREE;
+          block.fileID = -1;
+        }
+      }
+    }
+
+    // The cached unoptimized block count is no longer valid
+    unoptimizedBlocksCache = -1;
+  }
 }
 
 // Update defrag step
@@ -217,12 +183,23 @@ int AnimationManager::countTotalBlocks() const {
 
 // Calculate defragmentation progress in defragmenting (percentage)
 int AnimationManager::calculateDefragmentingCompletionPercentage() const {
-  int totalBlocks = countTotalBlocks();
-  int unoptimizedBlocks = countUnoptimizedBlocks();
-  
-  if (totalBlocks > 0) {
-    int optimizedBlocks = totalBlocks - unoptimizedBlocks;
-    return (optimizedBlocks * 100) / totalBlocks;
+  // The total block count is calculated only once
+  if (totalBlocksCache < 0) {
+    totalBlocksCache = countTotalBlocks();
+  }
+
+  // Recount the unoptimized blocks only when the cache was invalidated,
+  // every 15 frames, or when the end is near (so completion is detected
+  // without delay)
+  percentageFrameCounter++;
+  if (unoptimizedBlocksCache < 0 || percentageFrameCounter >= 15 || unoptimizedBlocksCache <= 20) {
+    unoptimizedBlocksCache = countUnoptimizedBlocks();
+    percentageFrameCounter = 0;
+  }
+
+  if (totalBlocksCache > 0) {
+    int optimizedBlocks = totalBlocksCache - unoptimizedBlocksCache;
+    return (optimizedBlocks * 100) / totalBlocksCache;
   } else {
     return 100; // If total blocks is 0, consider it 100% complete
   }

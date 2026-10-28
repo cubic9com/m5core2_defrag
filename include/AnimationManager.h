@@ -28,17 +28,13 @@ private:
   int driveInfoPhase2ScanX;  // X-coordinate during scanning in reading drive info phase 2
   int driveInfoPhase2ScanY;  // Y-coordinate during scanning in reading drive info phase 2
   bool driveInfoPhase2ScanCompleted;  // Whether the scan is complete in reading drive info phase 2
- 
-  // Collect positions of moving and reading blocks
-  void collectMovingAndReadingBlocks(std::vector<std::pair<int, int>>& movingBlockPositions, 
-                                    std::vector<std::pair<int, int>>& readingBlockPositions);
-  
-  // Update all blocks
-  void updateAllBlocks();
-  
-  // Process blocks that have completed movement
-  bool processCompletedBlocks(const std::vector<std::pair<int, int>>& movingBlockPositions, 
-                             const std::vector<std::pair<int, int>>& readingBlockPositions);
+
+  // Cached block counts for the completion percentage, so the whole grid
+  // does not have to be recounted on every frame (mutable because the
+  // calculation method is const)
+  mutable int totalBlocksCache;  // Cached total block count (-1 = not calculated yet)
+  mutable int unoptimizedBlocksCache;  // Cached unoptimized block count (-1 = needs recount)
+  mutable int percentageFrameCounter;  // Frames since the last unoptimized block recount
   
 public:
   // Constructor

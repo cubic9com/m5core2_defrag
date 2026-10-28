@@ -26,6 +26,7 @@ void FileManager::reset() {
   nextFileID = 0;
   currentFileToMove = -1;
   isMovingFile = false;
+  movingBlocks.clear();
   assignFileIDs();
 }
 
@@ -160,6 +161,10 @@ bool FileManager::findTargetPositionsForFile(const std::vector<std::pair<int, in
 void FileManager::moveFileToTarget(const std::vector<std::pair<int, int>> &fileBlocks,
                       const std::vector<std::pair<int, int>> &targetPositions,
                       int fileID) {
+  // Remember the moving blocks so updateFileMovement() does not need to
+  // scan the whole grid on every frame
+  movingBlocks.clear();
+
   // Move each block in the file
   for (size_t i = 0; i < fileBlocks.size(); i++) {
     int sourceX = fileBlocks[i].first;
@@ -184,6 +189,8 @@ void FileManager::moveFileToTarget(const std::vector<std::pair<int, int>> &fileB
     // Set animation start position to source
     targetBlock.animX = sourceX;
     targetBlock.animY = sourceY;
+
+    movingBlocks.push_back(&targetBlock);
     
     // Add a slight delay when moving each block to prevent sounds from overlapping
     delay(Config::Animation::BLOCK_MOVE_DELAY);
@@ -197,22 +204,16 @@ void FileManager::moveFileToTarget(const std::vector<std::pair<int, int>> &fileB
 // Update file movement
 void FileManager::updateFileMovement() {
   if (isMovingFile) {
-    bool allMoved = true;
-    for (int y = 0; y < gridManager.getRowCount(); y++) {
-      for (int x = 0; x < gridManager.getColumnCount(); x++) {
-        Block& block = gridManager.getBlock(x, y);
-        if (block.fileID == currentFileToMove && block.isMoving) {
-          allMoved = false;
-          break;
-        }
+    // Only the blocks of the file being moved need to be checked
+    for (Block* block : movingBlocks) {
+      if (block->isMoving) {
+        return; // Still moving
       }
-      if (!allMoved) break;
     }
-    
-    if (allMoved) {
-      isMovingFile = false;
-      currentFileToMove = -1;
-    }
+
+    isMovingFile = false;
+    currentFileToMove = -1;
+    movingBlocks.clear();
   }
 }
 

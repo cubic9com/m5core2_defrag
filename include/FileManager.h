@@ -25,6 +25,7 @@ private:
   int nextFileID; // Next file ID to assign
   int currentFileToMove; // Currently moving file ID
   bool isMovingFile; // File moving flag
+  std::vector<Block*> movingBlocks; // Blocks of the file currently being moved
 
   public:
   // Constructor
