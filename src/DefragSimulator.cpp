@@ -31,6 +31,19 @@ DefragSimulator::DefragSimulator()
 
 // Initialization
 void DefragSimulator::initialize() {
+  // The grid is built by the GridManager constructor, which runs before
+  // Config is initialized (the simulator is a global object, constructed
+  // before setup()), so the grid can be empty at this point. An empty
+  // grid makes the progress calculation report 100% immediately, so
+  // rebuild the grid and the file manager when its size does not match
+  // the configured size.
+  if (gridManager.getRowCount() != Config::getGridRows() ||
+      gridManager.getColumnCount() != Config::getGridCols()) {
+    gridManager = GridManager();
+    new (&fileManager) FileManager(gridManager);
+    animationManager.reset();
+  }
+
   // Initialize UI rendering class
   uiRenderer.initialize();
 
