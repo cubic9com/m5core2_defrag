@@ -1,10 +1,10 @@
 # Overview / 概要
 
-The m5core2_defrag project displays a disk defragmentation tool-like animation on the [M5Stack Core 2](https://docs.m5stack.com/en/core/core2) etc.
+The oddly soothing ritual of watching a disk defrag, recreated on the [M5Stack Core 2](https://docs.m5stack.com/en/core/core2) and other M5Stack devices. m5core2_defrag displays an animation modeled on classic disk defragmentation tools — just sit back and watch the blocks settle. And if you touch the screen... well, see what happens.
 
 \[日本語\]
 
-m5core2_defrag プロジェクトは、[M5Stack Core 2](https://docs.m5stack.com/en/core/core2) などにデフラグツール風のアニメを表示します。
+ディスクのデフラグ作業を眺めるという、どこか心地よいあの体験を、[M5Stack Core 2](https://docs.m5stack.com/en/core/core2)をはじめとするM5Stackデバイス上で再現しました。「m5core2_defrag」は、往年のディスクデフラグツールを模したアニメーションを表示します。画面を眺めながら、ブロックが整然と収まっていく様子をのんびりと楽しんでみてください。ちなみに、画面に触れてみると…何が起こるか、ぜひ試してみてください。
 
 # Video / 動画
 
