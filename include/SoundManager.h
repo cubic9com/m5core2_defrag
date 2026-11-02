@@ -13,6 +13,7 @@
 #pragma once
 
 #include <M5Unified.h>
+#include <cstdint>
 #include <random>
 #include "Config.h"
 
@@ -20,7 +21,8 @@
 class SoundManager {
 private:
   std::mt19937& rng;
-  
+  uint32_t lastSeekSoundTime; // Time of the last seek sound playback (milliseconds)
+
 public:
   // Constructor
   SoundManager(std::mt19937& rng);

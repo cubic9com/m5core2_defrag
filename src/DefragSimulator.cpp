@@ -138,7 +138,8 @@ void DefragSimulator::update() {
       uiRenderer.setCompletionPercentage(completionPercentage);
       
       // Play seek sound on every frame: the continuous chatter is part
-      // of the hard disk feel, even though it costs a few milliseconds
+      // of the hard disk feel. The pacing by time inside SoundManager
+      // keeps its density from rising with the frame rate
       soundManager.playSeekSound();
       
       // Check if all fragmented files have been moved

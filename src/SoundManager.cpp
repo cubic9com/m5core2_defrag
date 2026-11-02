@@ -16,7 +16,7 @@
 
 // Constructor
 SoundManager::SoundManager(std::mt19937& rng)
-  : rng(rng) {
+  : rng(rng), lastSeekSoundTime(0) {
   initialize();
 }
 
@@ -28,6 +28,14 @@ void SoundManager::initialize() {
 
 // Play hard disk seek sound
 void SoundManager::playSeekSound() {
+  // Pace the chatter by time, not by frames: this is called on every
+  // frame, and at higher frame rates the bursts would blur together
+  const uint32_t now = static_cast<uint32_t>(millis());
+  if (now - lastSeekSoundTime < static_cast<uint32_t>(Config::Sound::Seek::MIN_INTERVAL)) {
+    return;
+  }
+  lastSeekSoundTime = now;
+
   // Play a series of short noises with randomized frequency and length
   std::uniform_int_distribution<int> freqDist(-Config::Sound::Seek::FREQ_VARIATION, Config::Sound::Seek::FREQ_VARIATION);
   std::uniform_int_distribution<int> durDist(Config::Sound::Seek::MIN_DURATION, Config::Sound::Seek::MAX_DURATION);

@@ -136,6 +136,12 @@ public:
             // Number of consecutive beep sounds
             static constexpr int BEEP_COUNT = 6;
             
+            // Minimum interval between seek sound playbacks (milliseconds).
+            // The sound is triggered on every frame, but it is paced by
+            // time so the chatter density stays the same even when the
+            // frame rate rises
+            static constexpr int MIN_INTERVAL = 25;
+            
             // Speaker volume
             static constexpr int SPEAKER_VOLUME = 10;
         };
