@@ -137,12 +137,9 @@ void DefragSimulator::update() {
       completionPercentage = animationManager.calculateDefragmentingCompletionPercentage();
       uiRenderer.setCompletionPercentage(completionPercentage);
       
-      // Play seek sound (thinned out to every SEEK_SOUND_INTERVAL frames:
-      // one playback spends several milliseconds in internal delays, so
-      // playing it on every frame would cap the frame rate)
-      if (animationManager.getDefragStep() % Config::Animation::SEEK_SOUND_INTERVAL == 0) {
-        soundManager.playSeekSound();
-      }
+      // Play seek sound on every frame: the continuous chatter is part
+      // of the hard disk feel, even though it costs a few milliseconds
+      soundManager.playSeekSound();
       
       // Check if all fragmented files have been moved
       if (completionPercentage >= 100) {

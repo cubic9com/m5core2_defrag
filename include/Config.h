@@ -108,10 +108,6 @@ public:
         // Defrag step interval (in frames)
         static constexpr int DEFRAG_STEP_INTERVAL = 10;
         
-        // Seek sound interval (in frames): one playback takes several
-        // milliseconds in internal delays, so it is not played every frame
-        static constexpr int SEEK_SOUND_INTERVAL = 10;
-        
         // Block movement delay time (in milliseconds)
         static constexpr int BLOCK_MOVE_DELAY = 5;
         
