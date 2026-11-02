@@ -22,7 +22,8 @@ UIRenderer::UIRenderer()
     hitCounter(0),
     hasPushedFrame(false),
     lastPushedState(AnimationState::READING_DRIVE_INFO_PHASE1),
-    lastPushedPercentage(-1) {
+    lastPushedPercentage(-1),
+    lastPushedHitCounter(-1) {
 }
 
 // Initialization
@@ -143,8 +144,46 @@ void UIRenderer::drawHitCounter() {
   }
 }
 
+// Check whether anything that affects the rendered image changed since
+// the last pushed frame, without modifying the tracking data
+bool UIRenderer::frameChanged(GridManager& gridManager) {
+  // UI elements that are not part of the grid
+  if (state != lastPushedState || completionPercentage != lastPushedPercentage ||
+      hitCounter != lastPushedHitCounter) {
+    return true;
+  }
+
+  const int rows = gridManager.getRowCount();
+  const int cols = gridManager.getColumnCount();
+  if (static_cast<int>(cellSignatures.size()) != rows * cols) {
+    return true;
+  }
+
+  for (int y = 0; y < rows; y++) {
+    for (int x = 0; x < cols; x++) {
+      const Block& block = gridManager.getBlock(x, y);
+      const int index = y * cols + x;
+      if (cellSignature(block) != cellSignatures[index]) {
+        return true;
+      }
+      // A block that is moving or exploding (or was, on the last pushed
+      // frame) changes position between frames
+      if (block.isMoving || block.isExploding || lastDynamic[index]) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // Draw grid and UI elements
 void UIRenderer::draw(GridManager& gridManager, AnimationManager& animationManager) {
+  // Skip the redraw entirely when nothing on screen can have changed:
+  // the canvas and the display already show this exact frame
+  if (hasPushedFrame && !frameChanged(gridManager)) {
+    return;
+  }
+
   // Clear the canvas
   canvas.fillScreen(Colors::UI::WINDOW_BACK);
   
@@ -212,6 +251,7 @@ void UIRenderer::pushChangedBands(GridManager& gridManager) {
     hasPushedFrame = true;
     lastPushedState = state;
     lastPushedPercentage = completionPercentage;
+    lastPushedHitCounter = hitCounter;
     return;
   }
 
@@ -265,6 +305,7 @@ void UIRenderer::pushChangedBands(GridManager& gridManager) {
   }
   lastPushedState = state;
   lastPushedPercentage = completionPercentage;
+  lastPushedHitCounter = hitCounter;
 
   // The hit counter is drawn over the center of the grid
   if (state == AnimationState::TOUCHED) {

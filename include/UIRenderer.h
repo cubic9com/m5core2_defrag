@@ -41,9 +41,14 @@ private:
   bool hasPushedFrame; // Whether at least one frame has been pushed
   AnimationState lastPushedState; // Animation state on the last pushed frame
   int lastPushedPercentage; // Completion percentage on the last pushed frame
+  int lastPushedHitCounter; // Hit counter on the last pushed frame
 
   // Compute a compact signature of how a cell is rendered
   int cellSignature(const Block& block) const;
+
+  // Check whether anything that affects the rendered image changed since
+  // the last pushed frame (used to skip the redraw of unchanged frames)
+  bool frameChanged(GridManager& gridManager);
 
   // Transfer only the changed horizontal bands from the canvas to the display
   void pushChangedBands(GridManager& gridManager);

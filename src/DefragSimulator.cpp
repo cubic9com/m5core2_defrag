@@ -137,8 +137,12 @@ void DefragSimulator::update() {
       completionPercentage = animationManager.calculateDefragmentingCompletionPercentage();
       uiRenderer.setCompletionPercentage(completionPercentage);
       
-      // Play seek sound
-      soundManager.playSeekSound();
+      // Play seek sound (thinned out to every SEEK_SOUND_INTERVAL frames:
+      // one playback spends several milliseconds in internal delays, so
+      // playing it on every frame would cap the frame rate)
+      if (animationManager.getDefragStep() % Config::Animation::SEEK_SOUND_INTERVAL == 0) {
+        soundManager.playSeekSound();
+      }
       
       // Check if all fragmented files have been moved
       if (completionPercentage >= 100) {
