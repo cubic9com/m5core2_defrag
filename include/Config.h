@@ -104,9 +104,8 @@ public:
         // Position threshold (differences below this are ignored)
         static constexpr float POSITION_THRESHOLD = 0.05f;
         
-        // Gravity acceleration during explosion (with the explosion
-        // slowed to quarter speed, the acceleration scales by 1/16)
-        static constexpr float GRAVITY = 0.025f;
+        // Gravity acceleration during explosion
+        static constexpr float GRAVITY = 0.4f;
         
         // Frames per scan row advance in the drive info phases
         // (one row every 4 frames = quarter speed)
