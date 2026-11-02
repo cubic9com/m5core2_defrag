@@ -96,14 +96,21 @@ public:
     // Animation configuration
     // ========================================
     struct Animation {
-        // Block movement speed coefficient
-        static constexpr float MOVE_SPEED = 0.7f;
+        // Block movement speed coefficient (the original was 0.7; at
+        // 0.25 a glide takes about four times as many frames, so the
+        // animation plays at quarter speed)
+        static constexpr float MOVE_SPEED = 0.25f;
         
         // Position threshold (differences below this are ignored)
         static constexpr float POSITION_THRESHOLD = 0.05f;
         
-        // Gravity acceleration during explosion
-        static constexpr float GRAVITY = 0.4f;
+        // Gravity acceleration during explosion (with the explosion
+        // slowed to quarter speed, the acceleration scales by 1/16)
+        static constexpr float GRAVITY = 0.025f;
+        
+        // Frames per scan row advance in the drive info phases
+        // (one row every 4 frames = quarter speed)
+        static constexpr int SCAN_INTERVAL = 4;
         
         // Defrag step interval (in frames)
         static constexpr int DEFRAG_STEP_INTERVAL = 10;
@@ -140,7 +147,7 @@ public:
             // The sound is triggered on every frame, but it is paced by
             // time so the chatter density stays the same even when the
             // frame rate rises
-            static constexpr int MIN_INTERVAL = 25;
+            static constexpr int MIN_INTERVAL = 50;
             
             // Speaker volume
             static constexpr int SPEAKER_VOLUME = 10;

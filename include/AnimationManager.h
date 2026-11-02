@@ -35,7 +35,8 @@ private:
   mutable int totalBlocksCache;  // Cached total block count (-1 = not calculated yet)
   mutable int unoptimizedBlocksCache;  // Cached unoptimized block count (-1 = needs recount)
   mutable int percentageFrameCounter;  // Frames since the last unoptimized block recount
-  
+  int scanFrameCounter;  // Frames since the last scan row advance
+
 public:
   // Constructor
   AnimationManager(GridManager& gridManager);

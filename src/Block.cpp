@@ -220,7 +220,8 @@ void Block::startExploding(int touchX, int touchY) {
   
   // Normalize the direction vector and set the velocity
   // Adjust so that the closer to the center, the greater the velocity
-  float speed = 1.0f + (1.0f / distance) * 30.0f;
+  // (scaled to 1/4 so the explosion plays at quarter speed)
+  float speed = (1.0f + (1.0f / distance) * 30.0f) * 0.25f;
   explodeVelocityX = (dirX / distance) * speed;
   explodeVelocityY = (dirY / distance) * speed;
   

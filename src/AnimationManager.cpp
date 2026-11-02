@@ -23,7 +23,8 @@ AnimationManager::AnimationManager(GridManager& gridManager)
     driveInfoPhase2ScanCompleted(false),
     totalBlocksCache(-1),
     unoptimizedBlocksCache(-1),
-    percentageFrameCounter(0) {
+    percentageFrameCounter(0),
+    scanFrameCounter(0) {
 }
 
 // Reset
@@ -38,6 +39,7 @@ void AnimationManager::reset() {
   totalBlocksCache = -1;
   unoptimizedBlocksCache = -1;
   percentageFrameCounter = 0;
+  scanFrameCounter = 0;
 }
 
 // Block update process in reading drive info phase 1
@@ -46,7 +48,13 @@ void AnimationManager::updateBlocksInDriveInfoPhase1() {
   if (driveInfoPhase1ScanCompleted) {
     return;
   }
-  
+
+  // Advance the scan by one row every SCAN_INTERVAL frames
+  if (++scanFrameCounter < Config::Animation::SCAN_INTERVAL) {
+    return;
+  }
+  scanFrameCounter = 0;
+
   // Update all blocks in the current row
   for (driveInfoPhase1ScanX = 0; driveInfoPhase1ScanX < gridManager.getColumnCount(); driveInfoPhase1ScanX++) {
     gridManager.getBlock(driveInfoPhase1ScanX, driveInfoPhase1ScanY).updateStateInDriveInfoPhase1();
@@ -68,7 +76,13 @@ void AnimationManager::updateBlocksInDriveInfoPhase2() {
   if (driveInfoPhase2ScanCompleted) {
     return;
   }
-  
+
+  // Advance the scan by one row every SCAN_INTERVAL frames
+  if (++scanFrameCounter < Config::Animation::SCAN_INTERVAL) {
+    return;
+  }
+  scanFrameCounter = 0;
+
   // Update all blocks in the current row
   for (driveInfoPhase2ScanX = 0; driveInfoPhase2ScanX < gridManager.getColumnCount(); driveInfoPhase2ScanX++) {
     gridManager.getBlock(driveInfoPhase2ScanX, driveInfoPhase2ScanY).updateStateInDriveInfoPhase2();
